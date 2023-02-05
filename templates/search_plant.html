@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{%with messages = get_flashed_messages()%}
+{%if messages %}
+  <script type="text/javascript">
+    alert("{{messages[-1]}}");
+  </script>
+  {%endif%}
+{%endwith%}
+
+<!-- 검색결과 -->
+{% if search_list == () %}
+죄송합니다.
+{% else %}
+<div class="d-flex flex-wrap justify-content-center">
+{% for x in search_list%}
+<a href="/view_details/?name={{x[0]}}">
+  <div class="card text-bg-primary" style="margin: 1rem 1rem; width:20rem; height: 90%;">
+      <img src="{{ url_for('static', filename='image/{}.png'.format(x[0])) }}" class="card-img-top" style="height:80%;">
+      <div class="card-body">
+        <p class="card-text">{{x[1]}}</p>
+      </div>
+  </div>
+</a>
+{% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

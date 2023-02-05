@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{%with messages = get_flashed_messages()%}
+{%if messages %}
+  <script type="text/javascript">
+    alert("{{messages[-1]}}");
+  </script>
+  {%endif%}
+{%endwith%}
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <style>
+    body {
+      min-height: 100vh;
+    }
+
+    .input-form {
+      max-width: 680px;
+
+      margin-top: 80px;
+      padding: 32px;
+
+      background: hwb(258 16% 59% / 0.281);
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+      -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+      -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+    }
+  </style>
+</head>
+<script type="text/javascript">
+  window.history.forward();
+  function noBack(){window.history.forward();}
+ </script>
+
+ <body onload="noBack();" onpageshow="if(event.persisted) noBack();" onunload=""  >
+  <div class="container bg-dark">
+    <div class="input-form-backgroud row">
+      <div class="input-form col-md-12 mx-auto">
+        <h4 class="mb-3">회원가입</h4>
+        <form class="validation-form" novalidate method="POST">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="id" style="margin-right: 80px;">*아이디<span style="font-size: 12px;">(영문+숫자 6~12자)</span></label>
+              <div class="d-flex">
+              <input type="text" class="form-control" id="id" placeholder="" value="{{id}}"  name="id">
+              <button type="submit" formaction="/register/checkid" class="btn btn-danger text-nowrap" style="margin-left: 12px;">중복확인</button>
+              </div>
+              <div class="invalid-feedback">
+                아이디를 입력해주세요.
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="password">*비밀번호<span style="font-size: 12px;">(영문+숫자+특수문자 8~16자)</span></label>
+              <input type="password" class="form-control" id="password" placeholder="" value="{{pw}}"  name="pw">
+              <div class="invalid-feedback">
+                비밀번호를 입력해주세요.
+              </div>
+            </div>
+          </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="email">*이메일</label>
+            <input type="email" class="form-control" id="email" placeholder="you@example.com" name="email" value="{{email}}">
+            <div class="invalid-feedback">
+              이메일을 입력해주세요.
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="address">*닉네임<span class="text-white" style="font-size: 12px;">(한글 2~6자)</span></label>
+            <input type="text" class="form-control" id="address" placeholder="" name="nickname" value="{{nickname}}">
+            <div class="invalid-feedback">
+              주소를 입력해주세요.
+            </div>
+          </div>
+        </div>
+          
+          <div class="mb-3">
+            <label for="address2">상세주소<span style="color: hsl(0, 5%, 70%);">&nbsp;(필수 아님)</span></label>
+            <input type="text" class="form-control" id="address2" placeholder="상세주소를 입력해주세요.">
+          </div>
+
+          <div class="row">
+            <div class="col-md-8 mb-3">
+              <label for="root">가입 경로</label>
+              <select class="custom-select d-block w-100" id="root">
+                <option value=""></option>
+                <option>검색</option>
+                <option>카페</option>
+              </select>
+              <div class="invalid-feedback">
+                가입 경로를 선택해주세요.
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="code">추천인 코드</label>
+              <input type="text" class="form-control" id="code" placeholder="">
+              <div class="invalid-feedback">
+                추천인 코드를 입력해주세요.
+              </div>
+            </div>
+          </div>
+          <hr class="mb-4">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="aggrement" name="check_box" value="on">
+            <label class="custom-control-label" for="aggrement">개인정보 수집 및 이용에 동의합니다.</label>
+          </div>
+          <div class="mb-4"></div>
+          <button formaction="/register/" class="btn btn-primary btn-lg btn-block" type="submit">가입 완료</button>
+        </form>
+      </div>
+    </div>
+    <footer class="my-3 text-center text-small">
+      <p class="mb-1">&copy; 2021 YD</p>
+    </footer>
+  </div>
+  <script>
+    window.addEventListener('load', () => {
+      const forms = document.getElementsByClassName('validation-form');
+
+      Array.prototype.filter.call(forms, (form) => {
+        form.addEventListener('submit', function (event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  </script>
+</body>
+
+</html>
+{% endblock %}

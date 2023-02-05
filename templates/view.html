@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <hr class="featurette-divider">
+{% for x in result %}
+  <div class="row featurette">
+    <div class="col-md-7 order-md-2 d-flex flex-wrap flex-column justify-content-center" style="text-align:center; margin-bottom: 12px;">
+      <h2 class="featurette-heading fw-normal lh-1">{{ x[0] }} </h2> <span><h4> {{ x[2] }} </h4></span>
+      <p class="lead">{{ x[1] | safe }}</p> 
+      <div class="d-flex flex-wrap" style="height: 20%;">
+        <div style="width: 50%; border: 1px skyblue solid;">
+          <img src="{{ url_for('static', filename='image/물뿌리개.png') }}" alt="" style="height:4rem;">
+          <p>{{ x[3] }}</p>
+        </div>
+        <div style="width: 50%; border: 1px skyblue solid;">
+          <img src="{{ url_for('static', filename='image/태양.png') }}" alt="" style="height:4rem;">
+          <p>{{ x[4] }}</p>
+        </div>
+      </div>   
+    </div>
+    <div class="col-md-5 order-md-1">
+      <svg style="margin-top: 12px;" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><image href="../static/image/{{name}}.PNG" width="100%" height="100%"></svg>
+    </div>
+  </div>
+{% endfor %}
+  <hr class="featurette-divider">
+{% endblock %}

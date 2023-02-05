@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+  <!-- 제목 -->
+  <div class="input-group mt-3 mx-auto mt-5" style="width: 65%;">
+    <span class="input-group-text fw-bold border border-2 border-danger-subtle bg-danger-subtle" id="inputGroup-sizing-default">제목</span>
+    <input name="title" value="{{title}}" type="text" class="form-control border border-2 border-danger-subtle" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" {{readonly}}>
+  </div>
+  <!-- 내용 -->
+  <div class="mb-3" style="text-align: center;">
+    <label for="exampleFormControlTextarea1" class="form-label mt-3"><h4></h4></label>
+    <textarea name="context" class="form-control mx-auto border border-2 border-warning-subtle" id="exampleFormControlTextarea1" rows="16" style="width:65%" {{readonly}}>{{context}}</textarea>
+  </div>
+  <!-- 수정,삭제 버튼 -->
+  {% if session['user'] == userid %}
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-primary m-2" onclick="location.href='/board/{{id}}/?method=update'" {{hidden}}>수정</button>
+    <form  onsubmit="return confirm_delete()">
+      <button class="btn btn-primary m-2" formaction="/board/{{id}}/delete" {{hidden}}>삭제</button>
+    </form>
+  </div>
+  {% endif %}
+  {% if hidden == "hidden" %}
+  <button class="btn btn-primary m-2 w-auto mx-auto" onclick="location.href='/board/{{id}}/update'">등록</button>
+   {% endif %}
+
+<script>
+    function confirm_delete(){
+      if (confirm("정말 삭제하시겠습니까?")){
+        return true
+      }
+      else{
+        return false
+      }
+    }
+</script>
+{% endblock %}

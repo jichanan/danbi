@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- 없을 때 -->
+{% if len_result == 0 %}
+<h2>죄송합니다. 원하시는 식물을 찾을 수 없습니다.</h2>
+{% endif %}
+<!-- 1개일 때 -->
+<div class="d-flex flex-wrap align-items-center justify-content-center">
+{% if len_result == 1 %}
+{% for x in result %}
+<a href="/view_details/?name={{x[0]}}">
+  <div class="card text-bg-primary" style="height: 50vh;">
+      <img src="{{ url_for('static', filename='image/{}.png'.format(x[0])) }}" class="card-img-top" style="height: 80%;">
+      <div class="card-body">
+        <p class="card-text">{{x[1]}}</p>
+      </div>
+  </div>
+</a>
+{% endfor %}
+{% endif %}
+</div>
+<!-- 1개 이상 -->
+<div class="d-flex flex-wrap justify-content-center">
+{% if len_result > 1 %}
+{% for x in result %}
+<a href="/view_details/?name={{x[0]}}"> 
+  <div class="card text-bg-primary" style="margin: 1rem 1rem; width:20rem; height: 90%;">
+      <img src="{{ url_for('static', filename='image/{}.png'.format(x[0])) }}" class="card-img-top" style="height:80%;">
+      <div class="card-body">
+        <p class="card-text">{{x[1]}}</p>
+      </div>
+  </div> 
+</a>
+{% endfor %}
+{% endif %}
+</div>
+
+{% endblock %}

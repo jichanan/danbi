@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<!-- 게시글 목록 -->
+  <div class="table mt-4">
+    <table class="table table-bordered align-middle table-hover text-center">
+      <tr class="bg-warning-subtle">
+        <th>번호</th>
+        <th>제목</th>
+        <th>닉네임</th>
+      </tr>
+      {% for x in result %}
+        <tr class="table-light" onclick="location.href='/board/{{x[0]}}/'">
+          <td style="width: 5%; min-width: 60px; text-decoration: none; color: black;">{{x[0]}}</td>
+          <td style="overflow: hidden; white-space: normal; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{x[1]}}</td>
+          <td style="width: 10%; min-width: 120px; text-decoration: none; color: black;">{{x[2]}}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+<!-- 페이징 -->
+<nav aria-label="Page navigation example" class="d-flex justify-content-center">
+  <ul class="pagination"  >
+    <!-- 이전 버튼 -->
+    {% if block_start - 1 > 0 %}
+    <li class="page-item"><a class="page-link" href="/board/?page={{block_start-1}}">Previous</a></li>
+    {% endif %}
+    <!-- 페이지 버튼 -->
+    {% for i in range(block_start, block_end + 1) %}
+      {% if i >= total_page %}
+      {% else %}
+        <li class="page-item"><a class="page-link" href="/board/?page={{i}}">{{i}}</a></li>
+      {% endif %}
+    {% endfor %}
+    <!-- 다음 버튼 -->
+    {% if total_page - 1 > block_end %}
+    <li class="page-item"><a class="page-link" href="{{ url_for('board', page = block_end + 1) }}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+<!-- 글쓰기 버튼 -->
+  <form class="d-flex justify-content-end" action="/write/">
+    <button type="submit" class="btn btn-primary">글쓰기</button>
+  </form>
+
+{% endblock %}

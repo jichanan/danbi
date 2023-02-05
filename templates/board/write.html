@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>ㅋ</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+<body>
+<form action="/write/" method="POST">
+<!-- 제목 입력 -->
+<div class="input-group mt-3 mx-auto" style="width: 80%;">
+    <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
+    <input name="title" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+</div>
+<!-- 본문 입력 -->
+<div class="mb-3" style="text-align: center;">
+    <label for="exampleFormControlTextarea1" class="form-label mt-3"><h4>본문</h4></label>
+    <textarea name="context" class="form-control mx-auto" id="exampleFormControlTextarea1" rows="12" placeholder="내용을 입력하세요." style="width:80%"></textarea>
+</div>
+<div class="d-flex justify-content-center">
+<button class="btn btn-primary rounded p-2" type="submit">등록</button>
+</div>
+</form>
+<script>
+    window.history.forward();
+     function noBack() {
+         window.history.forward();
+     }
+</script>
+<!-- 스크립트 CDN -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+</body>
+</html>
+{% endblock  %}
