@@ -15,7 +15,7 @@ def register():
         pw = request.args.get("pw", default="")
         email = request.args.get("email", default="")
         nickname = request.args.get("nickname", default="")
-        return render_template('register.html',id=id, pw=pw, email=email, nickname=nickname)
+        return render_template('register/register.html',id=id, pw=pw, email=email, nickname=nickname)
     else:
         id = request.form['id']
         pw = request.form['pw']
@@ -41,7 +41,7 @@ def register():
             cur.execute(SQL,[id,pw,email,nickname])
             conn.commit()
             return redirect('/login/')
-        return render_template('register.html',id=id, email=email, pw=pw, nickname=nickname)
+        return render_template('register/register.html',id=id, email=email, pw=pw, nickname=nickname)
 
 # 회원가입 아이디 중복확인
 @bp.route('/register/checkid/', methods=['GET', 'POST'])

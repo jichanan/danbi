@@ -36,7 +36,7 @@ def home():
 @app.route('/question/1/')
 def question():
     if 'user' in session:
-        return render_template('question.html', site='1')
+        return render_template('recommend/question.html', site='1')
     else:
         return render_template("login.html")
     
@@ -45,20 +45,20 @@ def question():
 def question2():
     global sun 
     sun = request.args.get('sunlight')
-    return render_template('question.html', site='2')
+    return render_template('recommend/question.html', site='2')
 
 # 집 습도계, -> /question/3-1
 @app.route('/question/3/')
 def question3():
     global win
     win = request.args.get('wind')
-    return render_template('question.html', site='3')
+    return render_template('recommend/question.html', site='3')
 
 # 집 습도, -> /question/card
 @app.route('/question/3-1/')
 def question3_1():
     hygrometer = request.args.get('hygrometer')
-    return render_template('question.html',hygrometer=hygrometer )
+    return render_template('recommend/question.html',hygrometer=hygrometer )
 
 # 식물 리스트
 @app.route('/question/card/')
@@ -69,7 +69,7 @@ def card():
     cur.execute(SQL, [sun,hum])
     result = cur.fetchall()
     len_result = len(result)
-    return render_template('card.html',result=result, len_result=len_result)
+    return render_template('recommend/card.html',result=result, len_result=len_result)
 
 # 상세보기 
 @app.route('/view_details/')
@@ -78,7 +78,7 @@ def view_details():
     SQL = 'select name, detail, eng_name, how_water, how_sunlight from plant_info where plant_info.name=%s'
     cur.execute(SQL,[name])
     result = cur.fetchall()
-    return render_template('view.html', name=name, result=result)
+    return render_template('recommend/view.html', name=name, result=result)
 
 # 홈페이지 소개
 @app.route('/introduce/')

@@ -20,4 +20,4 @@ def search():
             search_list += (i,)
     if search_list == ():
         flash("죄송합니다. " + search1 + "을 찾을 수 없습니다.")
-    return render_template('search_plant.html', search_list=search_list)
+    return render_template('search/search_plant.html', search_list=search_list)
