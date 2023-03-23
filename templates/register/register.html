@@ -52,10 +52,10 @@
   <div class="container bg-dark">
     <div class="input-form-backgroud row">
       <div class="input-form col-md-12 mx-auto">
-        <h4 class="mb-3">회원가입</h4>
+        <h4 class="mb-3 text-white">회원가입</h4>
         <form class="validation-form" novalidate method="POST">
           <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-3 text-white">
               <label for="id" style="margin-right: 80px;">*아이디<span style="font-size: 12px;">(영문+숫자 6~12자)</span></label>
               <div class="d-flex">
               <input type="text" class="form-control" id="id" placeholder="" value="{{id}}"  name="id">
@@ -65,7 +65,7 @@
                 아이디를 입력해주세요.
               </div>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-3 text-white">
               <label for="password">*비밀번호<span style="font-size: 12px;">(영문+숫자+특수문자 8~16자)</span></label>
               <input type="password" class="form-control" id="password" placeholder="" value="{{pw}}"  name="pw">
               <div class="invalid-feedback">
@@ -75,7 +75,7 @@
           </div>
 
         <div class="row">
-          <div class="col-md-6 mb-3">
+          <div class="col-md-6 mb-3 text-white">
             <label for="email">*이메일</label>
             <input type="email" class="form-control" id="email" placeholder="you@example.com" name="email" value="{{email}}">
             <div class="invalid-feedback">
@@ -83,7 +83,7 @@
             </div>
           </div>
 
-          <div class="col-md-6 mb-3">
+          <div class="col-md-6 mb-3 text-white">
             <label for="address">*닉네임<span class="text-white" style="font-size: 12px;">(한글 2~6자)</span></label>
             <input type="text" class="form-control" id="address" placeholder="" name="nickname" value="{{nickname}}">
             <div class="invalid-feedback">
@@ -92,12 +92,12 @@
           </div>
         </div>
           
-          <div class="mb-3">
-            <label for="address2">상세주소<span style="color: hsl(0, 5%, 70%);">&nbsp;(필수 아님)</span></label>
+          <div class="mb-3 text-white">
+            <label for="address2">상세주소<span>&nbsp;(필수 아님)</span></label>
             <input type="text" class="form-control" id="address2" placeholder="상세주소를 입력해주세요.">
           </div>
 
-          <div class="row">
+          <div class="row text-white">
             <div class="col-md-8 mb-3">
               <label for="root">가입 경로</label>
               <select class="custom-select d-block w-100" id="root">
@@ -118,7 +118,7 @@
             </div>
           </div>
           <hr class="mb-4">
-          <div class="custom-control custom-checkbox">
+          <div class="custom-control custom-checkbox text-white">
             <input type="checkbox" class="custom-control-input" id="aggrement" name="check_box" value="on">
             <label class="custom-control-label" for="aggrement">개인정보 수집 및 이용에 동의합니다.</label>
           </div>
@@ -128,7 +128,7 @@
       </div>
     </div>
     <footer class="my-3 text-center text-small">
-      <p class="mb-1">&copy; 2021 YD</p>
+      <p class="mb-1">&copy; Danbi</p>
     </footer>
   </div>
   <script>

@@ -5,11 +5,11 @@
 <p><h2>Q1. 집에 햇빛이 얼마나 드나요?</h2></p>
 <form action="/question/2/"> 
   <div class="d-grid gap-2 col-2 mx-auto">  
-    <button type="submit" class="btn btn-outline-light"  name="sunlight" value="3" style="padding: 1rem 2rem;">남향</button>
-    <button type="submit" class="btn btn-outline-light"  name="sunlight" value="1" style="padding: 1rem 2rem;">동향</button>
-    <button type="submit" class="btn btn-outline-light"  name="sunlight" value="1" style="padding: 1rem 2rem;">서향</button>
-    <button type="submit" class="btn btn-outline-light"  name="sunlight" value="2" style="padding: 1rem 2rem;">남동향</button>
-    <button type="submit" class="btn btn-outline-light"  name="sunlight" value="2" style="padding: 1rem 2rem;">남서향</button> 
+    <button type="submit" class="btn btn-outline-primary"  name="sunlight" value="3" style="padding: 1rem 2rem;">남향</button>
+    <button type="submit" class="btn btn-outline-primary"  name="sunlight" value="1" style="padding: 1rem 2rem;">동향</button>
+    <button type="submit" class="btn btn-outline-primary"  name="sunlight" value="1" style="padding: 1rem 2rem;">서향</button>
+    <button type="submit" class="btn btn-outline-primary"  name="sunlight" value="2" style="padding: 1rem 2rem;">남동향</button>
+    <button type="submit" class="btn btn-outline-primary"  name="sunlight" value="2" style="padding: 1rem 2rem;">남서향</button> 
   </div>
 </form>
 {% endif %}
@@ -17,10 +17,10 @@
 <p><h2>Q2. 집에서 하루에 환기를 몇번하나요?</h2></p>
 <form action="/question/3/"> 
   <div class="d-grid gap-2 col-2 mx-auto">
-    <button type="submit" class="btn btn-outline-light"  name="wind" value="1" style="padding: 1rem 2rem;">안함</button>
-    <button type="submit" class="btn btn-outline-light"  name="wind" value="2" style="padding: 1rem 2rem;">1번</button>
-    <button type="submit" class="btn btn-outline-light"  name="wind" value="2" style="padding: 1rem 2rem;">2번</button>
-    <button type="submit" class="btn btn-outline-light"  name="wind" value="3" style="padding: 1rem 2rem;">3번 이상</button>
+    <button type="submit" class="btn btn-outline-primary"  name="wind" value="1" style="padding: 1rem 2rem;">안함</button>
+    <button type="submit" class="btn btn-outline-primary"  name="wind" value="2" style="padding: 1rem 2rem;">1번</button>
+    <button type="submit" class="btn btn-outline-primary"  name="wind" value="2" style="padding: 1rem 2rem;">2번</button>
+    <button type="submit" class="btn btn-outline-primary"  name="wind" value="3" style="padding: 1rem 2rem;">3번 이상</button>
   </div>
 </form>
 {% endif %}
@@ -28,8 +28,8 @@
 <p><h2>Q3. 집에 습도계가 있나요?</h2></p>
 <form action="/question/3-1/"> 
   <div class="d-grid gap-2 col-2 mx-auto">
-    <button type="submit" class="btn btn-outline-light" name="hygrometer" value="1" style="padding: 1rem 2rem;">네</button>
-    <button type="submit" class="btn btn-outline-light" name="hygrometer" value="0" style="padding: 1rem 2rem;">아니오</button> 
+    <button type="submit" class="btn btn-outline-primary" name="hygrometer" value="1" style="padding: 1rem 2rem;">네</button>
+    <button type="submit" class="btn btn-outline-primary" name="hygrometer" value="0" style="padding: 1rem 2rem;">아니오</button> 
   </div>
 </form>
 {% endif %}
@@ -37,29 +37,29 @@
 <p><h2>Q3-1. 집에 습도가 몇 % 인가요?</h2></p>
 <form action="/question/card/">
   <div class="form-check form-check-inline" style="font-size: 1.5rem;">
-    <input class="form-check-input" type="radio" name="humidity" id="inlineRadio1" value="1" required>
-    <label class="form-check-label" for="inlineRadio1">0~39%</label>
+    <input class="form-check-input" type="radio" name="humidity" id="inlineRadio1" value="1" style="border: 1px rgba(0,0,0,0.4) solid;" required>
+    <label class="form-check-label" for="inlineRadio1" style="color: rgba(0,0,0,0.8);">0~39%</label>
   </div>
   <div class="form-check form-check-inline" style="font-size: 1.5rem;">
-    <input class="form-check-input" type="radio" name="humidity" id="inlineRadio2" value="2" required>
-    <label class="form-check-label" for="inlineRadio2">40~69%</label>
+    <input class="form-check-input" type="radio" name="humidity" id="inlineRadio2" value="2" style="border: 1px rgba(0,0,0,0.4) solid;" required>
+    <label class="form-check-label" for="inlineRadio2" style="color: rgba(0,0,0,0.8);">40~69%</label>
   </div>
   <div class="form-check form-check-inline" style="font-size: 1.5rem;">
-    <input class="form-check-input" type="radio" name="humidity" id="inlineRadio2" value="3" required>
-    <label class="form-check-label" for="inlineRadio2">70~100%</label>
+    <input class="form-check-input" type="radio" name="humidity" id="inlineRadio2" value="3" style="border: 1px rgba(0,0,0,0.4) solid;" required>
+    <label class="form-check-label" for="inlineRadio2" style="color: rgba(0,0,0,0.8);">70~100%</label>
   </div>
   <p></p>
-  <button type="submit" class="btn btn-outline-light btn-lg">확인</button>
+  <button type="submit" class="btn btn-outline-primary btn-lg">확인</button>
 </form>
 {% endif %}
 {% if hygrometer == '0' %}
 <p><h2>Q3-1. 집에서 느끼는 체감습도를 골라주세요.</h2></p>
 <form action="/question/card/"> 
   <div class="d-grid gap-2 col-2 mx-auto">
-    <button type="submit" class="btn btn-outline-light"  name="humidity" value="1" style="padding: 1rem 2rem;">약간 건조</button>
-    <button type="submit" class="btn btn-outline-light"  name="humidity" value="2" style="padding: 1rem 2rem;">쾌적</button>
-    <button type="submit" class="btn btn-outline-light"  name="humidity" value="2" style="padding: 1rem 2rem;">습함</button>
-    <button type="submit" class="btn btn-outline-light"  name="humidity" value="3" style="padding: 1rem 2rem;">매우 불쾌</button>
+    <button type="submit" class="btn btn-outline-primary"  name="humidity" value="1" style="padding: 1rem 2rem;">약간 건조</button>
+    <button type="submit" class="btn btn-outline-primary"  name="humidity" value="2" style="padding: 1rem 2rem;">쾌적</button>
+    <button type="submit" class="btn btn-outline-primary"  name="humidity" value="2" style="padding: 1rem 2rem;">습함</button>
+    <button type="submit" class="btn btn-outline-primary"  name="humidity" value="3" style="padding: 1rem 2rem;">매우 불쾌</button>
   </div>
 </form>
 {% endif %}

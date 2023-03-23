@@ -1,7 +1,11 @@
+from email.mime import base
 from flask import Flask, redirect, request, render_template, session, flash, url_for, Blueprint
 import pymysql
 import math
+from datetime import datetime
 import re
+import base64, io
+from PIL import Image
 
 bp = Blueprint('board', __name__)
 conn = pymysql.connect(host='127.0.0.1', user='root', password='', db='danbi', charset='utf8')
@@ -39,31 +43,58 @@ def write():
         return render_template('board/write.html')
     else:
         title = request.form['title']
-        context = request.form['context']
+        editor_content = request.form['editor_content']
+        pattern = '<img src=".*?(?=")'
+        images64 = re.findall(pattern, editor_content)
         userid = session['user']
         cur.execute("SELECT nickname FROM users WHERE userid=%s", [userid])
-        nickname = cur.fetchone()
-        nickname = nickname[0]
-        print(nickname)
-        SQL = "INSERT INTO board (userid, title, context, nickname) VALUES (%s, %s, %s, %s);"
-        cur.execute(SQL, [userid, title,context, nickname])
+        nickname = cur.fetchone()[0]
+        SQL = "INSERT INTO board (userid, title, context, nickname) VALUES (%s, %s, 'Hi', %s);"
+        cur.execute(SQL, [userid, title, nickname])
         conn.commit()
+        imgNum = 1
+        for image64 in images64:
+            b64string = image64.split(',')[1]
+            img = Image.open(io.BytesIO(base64.b64decode(b64string)))
+            cur.execute('SELECT id FROM board ORDER BY id DESC LIMIT 1')
+            board_id = cur.fetchone()[0]
+            img.save('static/post_img/' + str(board_id) + '-' + str(imgNum) + '.png')
+            img_path = '/static/post_img/' + str(board_id) + '-' + str(imgNum) + '.png'
+            editor_content = re.sub('data:.*?(?=")', img_path, editor_content, count=1)
+            cur.execute('UPDATE board SET context = %s WHERE id = %s', [editor_content, board_id])
+            conn.commit()
+            imgNum += 1
         return redirect('/board/')
 
 # 게시글 상세보기
-@bp.route('/board/<id>/')
+@bp.route('/board/<id>/', methods=['POST', 'GET'])
 def boardview(id):
-        SQL = "SELECT title, context, userid, id FROM board where id=%s"
-        cur.execute(SQL,[id])
+        cur.execute("SELECT title, context, userid, id FROM board where id=%s",[id])
         result = cur.fetchone()
         title = result[0]
         context = result[1]
         userid = result[2]
+        cur.execute('select comment, comment_time, nickname from postcomment where board_id = %s', [id])
+        comments = cur.fetchall()
+        session_id = session['user']    
+        cur.execute('select nickname from users where userid=%s',[session_id])
+        nickname = cur.fetchone()[0]
         if request.args.get("method") == "update":
             return render_template('board/post_update.html',title=title, context=context, userid=userid, id=id)
         else:
-            return render_template('board/boardview.html',title=title, context=context, userid=userid, id=id, readonly="readonly")
+            return render_template('board/boardview.html',title=title, context=context, userid=userid, id=id, nickname=nickname, comments=comments, readonly="readonly")
 
+# 게시글 댓글
+@bp.route('/postcomment/<id>/', methods=['GET', 'POST'])
+def post_comment(id):
+    comment = request.form['comment']
+    nickname = request.form['nickname']
+    currentTime = datetime.now()
+    comment_time = currentTime.strftime('%Y-%m-%d %I:%M:%S %p')
+    cur.execute('insert into postcomment (board_id, comment, comment_time, nickname) values (%s, %s, %s, %s)', [id, comment, comment_time, nickname])
+    conn.commit()
+    return redirect(f'/board/{id}/')
+    
 
 # 게시글 삭제
 @bp.route('/board/<id>/delete/')

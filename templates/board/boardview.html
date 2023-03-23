@@ -1,16 +1,16 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
+<script src="https://kit.fontawesome.com/9d89f9ed49.js" crossorigin="anonymous"></script>
   <!-- 제목 -->
   <div class="input-group mt-3 mx-auto mt-5" style="width: 65%;">
     <span class="input-group-text fw-bold border border-2 border-danger-subtle bg-danger-subtle" id="inputGroup-sizing-default">제목</span>
     <input name="title" value="{{title}}" type="text" class="form-control border border-2 border-danger-subtle" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" {{readonly}}>
   </div>
   <!-- 내용 -->
-  <div class="mb-3" style="text-align: center;">
-    <label for="exampleFormControlTextarea1" class="form-label mt-3"><h4></h4></label>
-    <textarea name="context" class="form-control mx-auto border border-2 border-warning-subtle" id="exampleFormControlTextarea1" rows="16" style="width:65%" {{readonly}}>{{context}}</textarea>
+  <hr>
+  <div class="text-start">
+  {{ context | safe }}
   </div>
   <!-- 수정,삭제 버튼 -->
   {% if session['user'] == userid %}
@@ -24,15 +24,62 @@
   {% if hidden == "hidden" %}
   <button class="btn btn-primary m-2 w-auto mx-auto" onclick="location.href='/board/{{id}}/update'">등록</button>
    {% endif %}
+  
+<!-- 댓글 -->
+<hr>
+<h4 class="text-start ps-3">댓글</h4>
+{% for comment in comments%}
+<div style="display:flex; align-items: start; flex-direction: column; padding-left: 1em;">
+  <div style="margin-bottom: 4px;"><b>{{comment[2]}}</b> <i class="fa-solid fa-seedling"></i></div>
+  <div class="text-start fw-light" style="white-space: pre; color: rgba(0,0,0,0.8);">{{comment[0]}}</div>
+  <div class="opacity-50">{{comment[1]}}</div>
+</div>
+<hr>
+{% endfor %}
 
+<!-- 댓글입력창 -->
+<form action="/postcomment/{{id}}/" method="POST" class="mx-auto my-4 text-start p-3" style="width: 85%; border: 1px rgba(243, 236, 236, 0.8) solid; border-radius: 1em; background-color: rgba(255,255,255,0.6); box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
+  <div><b>{{nickname}}</b></div>
+  <textarea id="commentTextarea" name="comment" placeholder="댓글을 남겨보세요." onkeyup="resize(this)" onkeydown="resize(this)" style="max-height: 200px; width: 100%; border: none; resize: none; outline: none; background-color:rgba(255,255,255,0.6); color: rgba(0,0,0,0.8); margin-top: 12px;"></textarea>
+  <div class="text-end">
+    <button class="p-2" id="registerBtn" type="submit" style="background-color: rgba(255,255,255,0.6); border: none; border-radius: 4px; transition: background-color 0.6s ease; color: rgba(0,0,0,0.5);">등록</button>
+  </div>
+  <textarea name="nickname" style="display:none;">{{nickname}}</textarea> 
+</form>
+
+<!-- javascript -->
 <script>
-    function confirm_delete(){
-      if (confirm("정말 삭제하시겠습니까?")){
-        return true
-      }
-      else{
-        return false
-      }
-    }
+function confirm_delete(){
+  if (confirm("정말 삭제하시겠습니까?")){
+    return true
+  }
+  else{
+    return false
+  }
+}
+
+function resize(obj) {
+  obj.style.height = "1px"
+  obj.style.height = 30 + obj.scrollHeight + "px"
+  window.scrollTo(0, document.body.scrollHeight)
+}
+
+var commentTextarea = document.getElementById('commentTextarea')
+var rgisterBtn = document.getElementById('registerBtn')
+commentTextarea.addEventListener('keyup', test);
+
+function test() {
+  if(commentTextarea.value.length > 0){
+    registerBtn.style.backgroundColor = 'rgba(255,0,255,0.7)';
+    registerBtn.style.color = 'white';
+  } else {
+    registerBtn.style.backgroundColor = 'rgb(255,255,255,0.6)';
+    registerBtn.style.color = 'rgba(0,0,0,0.5)';
+  }
+}
 </script>
+{% endblock %}
+
+{% block script %}
+
 {% endblock %}

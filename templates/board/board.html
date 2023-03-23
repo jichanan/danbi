@@ -35,7 +35,7 @@
     {% endfor %}
     <!-- 다음 버튼 -->
     {% if total_page - 1 > block_end %}
-    <li class="page-item"><a class="page-link" href="{{ url_for('board', page = block_end + 1) }}">Next</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url_for('board.board', page = block_end + 1) }}">Next</a></li>
     {% endif %}
   </ul>
 </nav>
