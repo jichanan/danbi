@@ -1,21 +1,68 @@
 {% extends "layout.html" %}
 
+{% block style %}
+<style>
+.post:link {
+  text-decoration: none;
+  color: rgba(0,0,0,0.8)
+}
+
+.post:visited{
+  color : gray
+}
+
+.post {
+  white-space: no-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: start;
+}
+
+.red_dot {
+  width: 5px;
+  height: 5px;
+  background-color: red;
+  border-radius: 8px;
+}
+
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .post {
+    width: 70vw;
+  }
+}
+
+@media screen and (min-width: 321px) and (max-width: 768px) {
+  .post {
+    width: 50vw;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .post {
+    width: 40vw;
+  }
+}
+
+</style>
+{% endblock %}
+
 {% block content %}
 
 <!-- 게시글 목록 -->
-  <div class="table mt-4">
-    <table class="table table-bordered align-middle table-hover text-center">
+  <div class="table mt-4" style="width: auto;">
+    <table class="table table-bordered align-middle table-hover text-center" style="width: 95vw;">
       <tr class="bg-warning-subtle">
         <th>번호</th>
         <th>제목</th>
         <th>닉네임</th>
       </tr>
       {% for x in result %}
-        <tr class="table-light" onclick="location.href='/board/{{x[0]}}/'">
+        <tr class="table-light">
           <td style="width: 5%; min-width: 60px; text-decoration: none; color: black;">{{x[0]}}</td>
-          <td style="overflow: hidden; white-space: normal; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{x[1]}}</td>
+          <td><a href="/board/{{x[0]}}/" class="post" style="display:block;">{{x[1]}}</a></td>
           <td style="width: 10%; min-width: 120px; text-decoration: none; color: black;">{{x[2]}}</td>
-        </tr>
+        </tr> 
       {% endfor %}
     </table>
   </div>
