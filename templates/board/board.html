@@ -1,24 +1,68 @@
 {% extends "layout.html" %}
 
+{% block style %}
+<style>
+  .post_hover:hover {
+    background-color: rgba(0,0,255,0.1);
+  }
+
+  .test:link {
+    color: black;
+  }
+
+  .test:visited {
+    color: grey;
+  }
+
+  .post_info {
+    font-size: 14px;
+    color: grey;
+  }
+
+  @media screen and (max-width: 1920px) {
+    .post_title {
+      width: 80vw;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    .post_title {
+      width: 65vw;
+    }
+  }
+
+  @media screen and (max-width: 650px) {
+    .post_title {
+      width: 55vw;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 
 <!-- 게시글 목록 -->
-  <div class="table mt-4">
-    <table class="table table-bordered align-middle table-hover text-center">
+    <table style="margin: 24px 0;">
       <tr class="bg-warning-subtle">
-        <th>번호</th>
-        <th>제목</th>
-        <th>닉네임</th>
+        <th style="padding:12px;">번 호</th>
+        <th>제 목</th>
+        <th>댓 글</th>
       </tr>
       {% for x in result %}
-        <tr class="table-light" onclick="location.href='/board/{{x[0]}}/'">
-          <td style="width: 5%; min-width: 60px; text-decoration: none; color: black;">{{x[0]}}</td>
-          <td style="overflow: hidden; white-space: normal; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{x[1]}}</td>
-          <td style="width: 10%; min-width: 120px; text-decoration: none; color: black;">{{x[2]}}</td>
+        <tr class="post_hover">
+          <td style="width: 5vw; min-width: 60px; color: black;">{{x[0]}}</td>
+          <td class="post_title" style="display: flex; white-space: nowrap; overflow: hidden;">
+            <a class="test" href="/board/{{x[0]}}/" style="width: 100%; padding: 12px 0; text-decoration: none; text-align: start;">
+              {{x[1]}}
+              <div class="post_info">
+                작성자 {{x[2]}} 조회수 0 좋아요 0
+              </div>
+            </a>
+          </td>
+          <td style="width: 10vw; min-width: 120px; color: black;">{{x[3]}}</td>
         </tr>
       {% endfor %}
     </table>
-  </div>
 <!-- 페이징 -->
 <nav aria-label="Page navigation example" class="d-flex justify-content-center">
   <ul class="pagination"  >
