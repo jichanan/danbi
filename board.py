@@ -66,46 +66,46 @@ def write():
         return redirect('/board/')
 
 # 게시글 상세보기
+def insert_hit_count_table(session_id, id, hit_time):
+    cur.execute('INSERT INTO hit_count (userid, board_no, hit_time) VALUES (%s, %s, %s)', [session_id, id, hit_time])
+    conn.commit()
+
+def increase_1_hits(id):
+    cur.execute('SELECT hits FROM board WHERE id = %s', [id])
+    hits = cur.fetchone()[0]
+    hits = int(hits)
+    hits += 1
+    cur.execute('UPDATE board SET hits = %s WHERE id = %s', [hits, id])
+    conn.commit()
+
+def change_hittime_to_currenttime(session_id, id):
+    current_time = datetime.now()
+    cur.execute('UPDATE hit_count SET hit_time = %s WHERE userid = %s AND board_no = %s',[current_time, session_id, id])
+    conn.commit()
+
 @bp.route('/board/<id>/', methods=['POST', 'GET'])
 def boardview(id):
-        cur.execute("SELECT title, context, userid, id FROM board where id=%s",[id])
-        result = cur.fetchone()
-        title = result[0]
-        context = result[1]
-        userid = result[2]
+        cur.execute("SELECT title, context, userid FROM board where id=%s",[id])
+        title, context, userid = cur.fetchone()
         cur.execute('select comment, comment_time, nickname from postcomment where board_id = %s', [id])
         comments = cur.fetchall()
-        session_id = session['user']    
+        session_id = session['user']
         cur.execute('select nickname from users where userid=%s',[session_id])
         nickname = cur.fetchone()[0]
         # 조회수
         cur.execute('SELECT board_no FROM hit_count WHERE userid = %s', [session_id])
-        hit = cur.fetchall()
-        if (id,) not in hit:
+        hit_board_no = cur.fetchall()
+        if (id,) not in hit_board_no:
             hit_time = datetime.now()
-            cur.execute('INSERT INTO hit_count (userid, board_no, hit_time) VALUES (%s, %s, %s)', [session_id, id, hit_time])
-            conn.commit()
-            # increase 1 hits
-            cur.execute('SELECT hits FROM board WHERE id = %s', [id])
-            hits = cur.fetchone()[0]
-            hits = int(hits)
-            hits += 1
-            cur.execute('UPDATE board SET hits = %s WHERE id = %s', [hits, id])
-            conn.commit()
+            insert_hit_count_table(session_id, id, hit_time)
+            increase_1_hits(id)
         else:
             cur.execute('SELECT hit_time FROM hit_count WHERE userid = %s AND board_no = %s', [session_id, id])
             hit_time = cur.fetchone()[0]
             hit_time = datetime.strptime(hit_time, '%Y-%m-%d %H:%M:%S.%f')
             if datetime.now() - hit_time > timedelta(days=1):
-                current_time = datetime.now()
-                cur.execute('UPDATE hit_count SET hit_time = %s WHERE userid = %s AND board_no = %s',[current_time, session_id, id])
-                conn.commit()
-                cur.execute('SELECT hits FROM board WHERE id = %s', [id])
-                hits = cur.fetchone()[0]
-                hits = int(hits)
-                hits += 1
-                cur.execute('UPDATE board SET hits = %s WHERE id = %s', [hits, id])
-                conn.commit()
+                change_hittime_to_currenttime(session_id, id)
+                increase_1_hits(id)
         if request.args.get("method") == "update":
             return render_template('board/post_update.html',title=title, context=context, userid=userid, id=id)
         else:
