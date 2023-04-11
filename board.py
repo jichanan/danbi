@@ -79,10 +79,48 @@ def boardview(id):
         session_id = session['user']    
         cur.execute('select nickname from users where userid=%s',[session_id])
         nickname = cur.fetchone()[0]
+        cur.execute('select likes from board where id = %s',[id])
+        likes = cur.fetchone()[0]
+        cur.execute('select id from post_like where userid = %s and board_no = %s', [session_id, id])
+        check_ox = cur.fetchone()
         if request.args.get("method") == "update":
             return render_template('board/post_update.html',title=title, context=context, userid=userid, id=id)
         else:
-            return render_template('board/boardview.html',title=title, context=context, userid=userid, id=id, nickname=nickname, comments=comments, readonly="readonly")
+            return render_template('board/boardview.html',title=title, context=context, userid=userid, id=id, nickname=nickname, comments=comments, likes=likes, check_ox=check_ox, readonly="readonly")
+
+# 좋아요
+def insert_info_into_postlike(userid, board_id):
+    cur.execute('insert into post_like (userid, board_no) values (%s, %s)', [userid, board_id])
+    conn.commit()
+
+def delete_info_from_postlike(userid, board_id):
+    cur.execute('delete from post_like where userid = %s and board_no = %s', [userid, board_id])
+    conn.commit()
+
+def increase_1_like(board_id):
+    cur.execute('select likes from board where id = %s', [board_id])
+    likes = int(cur.fetchone()[0]) + 1
+    cur.execute('update board set likes = %s where id = %s', [likes, board_id])
+    conn.commit()
+
+def decrease_1_like(board_id):
+    cur.execute('select likes from board where id = %s', [board_id])
+    likes = int(cur.fetchone()[0]) - 1
+    cur.execute('update board set likes = %s where id = %s', [likes, board_id])
+    conn.commit()
+
+@bp.route('/post_like/', methods=['POST', 'GET'])
+def post_like():
+    like_btn = request.form.get('like_btn')
+    board_id = request.form['id']
+    userid = session['user']
+    if like_btn == 'checked':
+        insert_info_into_postlike(userid, board_id)
+        increase_1_like(board_id)
+    else:
+        delete_info_from_postlike(userid, board_id)
+        decrease_1_like(board_id)
+    return 'pass'
 
 # 게시글 댓글
 @bp.route('/postcomment/<id>/', methods=['GET', 'POST'])
