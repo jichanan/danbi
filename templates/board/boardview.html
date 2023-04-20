@@ -126,6 +126,8 @@ if (like_box.checked === true) {
 // 하트 클릭시마다 ..
 function like() {
   var heart = document.getElementById("heart");
+  const like_effect_sound = new Audio('/static/sound/like.wav')
+  like_effect_sound.play()
   heart.classList.toggle('active');
   if (heart.classList.contains('active')) {
     var num = document.getElementById("like_num").innerHTML;
