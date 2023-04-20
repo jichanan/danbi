@@ -1,8 +1,7 @@
-from email.mime import base
 from flask import Flask, redirect, request, render_template, session, flash, url_for, Blueprint
 import pymysql
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 import base64, io
 from PIL import Image
@@ -21,7 +20,7 @@ def board():
         total_cnt = cur.fetchone()
         total_cnt = total_cnt[0] 
         total_page = math.ceil(total_cnt / per_page)
-        SQL = 'SELECT id, title, nickname, comment_count FROM board ORDER BY id DESC LIMIT %s OFFSET %s'
+        SQL = 'SELECT id, title, nickname, comment_count, hits FROM board ORDER BY id DESC LIMIT %s OFFSET %s'
         cur.execute(SQL, [per_page, page * per_page])
         result = cur.fetchall()
         # 페이지 블럭을 5개씩 표기
@@ -49,8 +48,8 @@ def write():
         userid = session['user']
         cur.execute("SELECT nickname FROM users WHERE userid=%s", [userid])
         nickname = cur.fetchone()[0]
-        SQL = "INSERT INTO board (userid, title, context, nickname) VALUES (%s, %s, 'Hi', %s);"
-        cur.execute(SQL, [userid, title, nickname])
+        SQL = "INSERT INTO board (userid, title, context, nickname) VALUES (%s, %s, %s, %s);"
+        cur.execute(SQL, [userid, title, editor_content, nickname])
         conn.commit()
         imgNum = 1
         for image64 in images64:
@@ -67,22 +66,51 @@ def write():
         return redirect('/board/')
 
 # 게시글 상세보기
+def insert_hit_count_table(session_id, id, hit_time):
+    cur.execute('INSERT INTO hit_count (userid, board_no, hit_time) VALUES (%s, %s, %s)', [session_id, id, hit_time])
+    conn.commit()
+
+def increase_1_hits(id):
+    cur.execute('SELECT hits FROM board WHERE id = %s', [id])
+    hits = cur.fetchone()[0]
+    hits = int(hits)
+    hits += 1
+    cur.execute('UPDATE board SET hits = %s WHERE id = %s', [hits, id])
+    conn.commit()
+
+def change_hittime_to_currenttime(session_id, id):
+    current_time = datetime.now()
+    cur.execute('UPDATE hit_count SET hit_time = %s WHERE userid = %s AND board_no = %s',[current_time, session_id, id])
+    conn.commit()
+
 @bp.route('/board/<id>/', methods=['POST', 'GET'])
 def boardview(id):
-        cur.execute("SELECT title, context, userid, id FROM board where id=%s",[id])
-        result = cur.fetchone()
-        title = result[0]
-        context = result[1]
-        userid = result[2]
+        cur.execute("SELECT title, context, userid FROM board where id=%s",[id])
+        title, context, userid = cur.fetchone()
         cur.execute('select comment, comment_time, nickname from postcomment where board_id = %s', [id])
         comments = cur.fetchall()
-        session_id = session['user']    
+        session_id = session['user']
         cur.execute('select nickname from users where userid=%s',[session_id])
         nickname = cur.fetchone()[0]
+
         cur.execute('select likes from board where id = %s',[id])
         likes = cur.fetchone()[0]
         cur.execute('select id from post_like where userid = %s and board_no = %s', [session_id, id])
         check_ox = cur.fetchone()
+        # 조회수
+        cur.execute('SELECT board_no FROM hit_count WHERE userid = %s', [session_id])
+        hit_board_no = cur.fetchall()
+        if (id,) not in hit_board_no:
+            hit_time = datetime.now()
+            insert_hit_count_table(session_id, id, hit_time)
+            increase_1_hits(id)
+        else:
+            cur.execute('SELECT hit_time FROM hit_count WHERE userid = %s AND board_no = %s', [session_id, id])
+            hit_time = cur.fetchone()[0]
+            hit_time = datetime.strptime(hit_time, '%Y-%m-%d %H:%M:%S.%f')
+            if datetime.now() - hit_time > timedelta(days=1):
+                change_hittime_to_currenttime(session_id, id)
+                increase_1_hits(id)
         if request.args.get("method") == "update":
             return render_template('board/post_update.html',title=title, context=context, userid=userid, id=id)
         else:
