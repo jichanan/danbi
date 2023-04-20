@@ -92,7 +92,6 @@ def boardview(id):
         session_id = session['user']
         cur.execute('select nickname from users where userid=%s',[session_id])
         nickname = cur.fetchone()[0]
-
         cur.execute('select likes from board where id = %s',[id])
         likes = cur.fetchone()[0]
         cur.execute('select id from post_like where userid = %s and board_no = %s', [session_id, id])
