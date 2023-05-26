@@ -1,0 +1,161 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://kit.fontawesome.com/9d89f9ed49.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block style%}
+<style>
+#chat_container {
+  margin-top: 16px;
+  width: 320px;
+}
+
+#chat_box {
+    box-shadow: 4px 4px 4px rgba(255,0,255,0.1);
+    resize: none;
+    border: none;
+    height: 75vh;
+    width: 320px;
+    padding-top: 8px;
+    padding-left: 8px;
+    outline: none;
+}
+
+#msg_box {
+    width: 80%;
+    height: 50px;
+    border: 1px solid rgba(0,0,0,0.3);
+}
+
+#send_btn {
+  width: 20%;
+  height: 50px;
+  border: 1px rgba(0,0,0,0.3) solid;
+}
+
+.message-bubble {
+  background-color: #e5e5ea;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  max-width: 300px;
+  display: inline-block;
+}
+
+.message-bubble p {
+  margin: 0;
+}
+
+@media screen and (max-width: 360px) {
+    #chat_container {
+        width: 300px;
+    }
+
+    #chat_box {
+      width: 300px;
+      height: 70vh;
+    }
+
+    #msg_box {
+      width: 80%;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="chat_container" class="mx-auto" style="border: 1px rgba(0,0,0,0.3) solid;">
+  <div class="mx-auto" id="chat_box" style="text-align: left; overflow: auto;"></div>
+  <div style="display: flex;">
+    <input id="msg_box" type="text" onkeyup="detectEnter(event)" style="outline: none;" placeholder="채팅 입력">
+    <button id="send_btn" onclick="send_message()"><i class="fa-regular fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<div id="test" style="display: none;">{{user_id}}</div>
+{% endblock %}
+
+{% block script %}
+<script>
+// socket연결
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+// socket연결 시 실행
+socket.on('join_chatroom', function(chat_history) {
+  chat_history.forEach(function(item, index) {
+    if ($('#test').text() === item.user_id) {
+      $("#chat_box").append('<div style="text-align: right; margin-right: 16px;"><div class="message-bubble" style="text-align: left;">' + item.message + '</div><div>');
+    }
+    else {
+      $("#chat_box").append('<b>' + item.nickname + '</b>' + '<br><div class="message-bubble"><p>' + item.message + '</p></div><br>');
+    }
+  })
+});
+
+// 엔터키 누르면 전송버튼 
+function detectEnter(e) {
+  if (e.keyCode === 13) {
+    send_btn.click()
+  }
+};
+
+// 서버로 메시지 보내기
+let can_send = true;
+function send_message() {
+  if (can_send) {
+    can_send = false;
+    var message = document.getElementById('msg_box').value;
+    socket.emit("send_message", message);
+    $("#msg_box").val("");
+    setTimeout(function() {
+      can_send = true;
+    }, 500);
+  }
+  else {
+    alert("한번에 너무 많은 채팅을 보내고 있어요.")
+  }
+}
+
+// 서버에서 메시지 받기
+socket.on('recieve message', function (data) {
+  if ($('#test').text() === data.user_id) {
+    $("#chat_box").append('<div style="text-align: right; margin-right: 16px;"><div class="message-bubble" style="text-align: left;">' + data.message + '</div><div>');
+    var chat_box = document.getElementById('chat_box');
+    chat_box.scrollTop = chat_box.scrollHeight;
+  } else {
+    $("#chat_box").append('<b>' + data.nickname + '</b>' + '<br><div class="message-bubble"><p>' + data.message + '</p></div><br>');
+    var chat_box = document.getElementById('chat_box');
+    chat_box.scrollTop = chat_box.scrollHeight;
+  }
+});
+
+// 채팅내역 불러오기
+socket.on('chat_history', function(chat_history) {
+  var box_content = document.getElementById('box');
+  chat_history.forEach(function(item, index) {
+    if (index === chat_history.length - 1) {
+      box_content.innerHTML += item.message 
+    } else {
+      box_content.innerHTML += item.message + '\n';
+    }
+    
+  });
+});
+
+// 서버에서 메시지 받기
+socket.on('test', function(data) {
+  alert(data);
+});
+
+
+// 엔터키로 버튼 클릭
+document.getElementById('message').addEventListener('keyup', function(event) {
+  if (event.keyCode === 13) {
+    document.getElementById('enter').click();
+  }
+});
+</script>
+{% endblock %}
