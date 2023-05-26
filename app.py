@@ -1,11 +1,16 @@
 from flask import Flask, redirect, request, render_template, session, flash, url_for
+from flask_socketio import SocketIO, emit
 import pymysql
 import math
 import re
-import register, login, board, search
+import register, login, board, search, chat
+from chat import init_app
 
 app = Flask(__name__)
 app.secret_key = "wefwg23g24t42f2r2g3g1guhwuehf2"
+# register chat_bp & init_app for socket
+init_app(app)
+# pymysql 설정
 conn = pymysql.connect(host='127.0.0.1', user='root', password='', db='danbi', charset='utf8')
 cur = conn.cursor()
 
@@ -85,5 +90,6 @@ def view_details():
 def introduce():
     return render_template('introduce.html')
 
-app.run(debug=True, port=5000)
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
 
